@@ -1,12 +1,16 @@
 FROM heroku/miniconda
 
-RUN conda install -c gettsim -c conda-forge gettsim
+
 
 # Grab requirements.txt.
 ADD ./requirements.txt /tmp/requirements.txt
 
+
+
 # Install dependencies
 RUN pip install -qr /tmp/requirements.txt
+
+RUN conda install -c gettsim gettsim
 
 # Add our code
 ADD ./ /opt/
