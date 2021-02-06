@@ -1,4 +1,4 @@
-FROM heroku/miniconda
+FROM heroku/miniconda:3
 
 
 
