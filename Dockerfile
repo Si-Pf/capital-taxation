@@ -11,7 +11,7 @@ ADD ./requirements.txt /tmp/requirements.txt
 RUN pip install -qr /tmp/requirements.txt
 
 RUN conda install -c gettsim gettsim
-RUN conda install mkl-fft
+RUN conda install mkl-fft pandas=1.2.1
 
 # Add our code
 ADD ./ /opt/
