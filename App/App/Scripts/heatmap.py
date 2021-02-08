@@ -146,6 +146,6 @@ def heatmap_tab(plot_dict):
 
     tab = Panel(child = layout, title="Household heatmap (Reform)")
 
-    
+
 
     return tab

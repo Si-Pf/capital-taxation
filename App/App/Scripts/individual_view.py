@@ -22,13 +22,14 @@ from bokeh.palettes import Category20
 from gettsim import set_up_policy_environment
 from gettsim.taxes.eink_st import st_tarif
 
+
 from Scripts.plotstyle import plotstyle
 
 
 def individual_view(plot_dict):
     plot_dict = plot_dict["individual_view"]
 
-    def prepare_data(sel_year):
+    def prepare_data():
         
         LI = pd.Series(data=np.linspace(-1, 300001, 300001)) # Labor Income
         CI = pd.Series(data=np.linspace(-1, 300001, 300001)) # Capital Income
@@ -43,7 +44,7 @@ def individual_view(plot_dict):
         
 
         #Get relevant policy params from GETTSIM
-        policy_params, policy_functions = set_up_policy_environment(sel_year)
+        policy_params, policy_functions =  set_up_policy_environment(2020)
         #labor_income = pd.Series(data=[LI])
         #integrated_income = pd.Series(data=[LI+CI])
         Tau_flat = (st_tarif(TLI,policy_params["eink_st"])/TLI) # Income tax rate - flat
@@ -169,7 +170,7 @@ def individual_view(plot_dict):
     CI_selection.on_change("value", update_plot)
     LI_selection.on_change("value", update_plot)
 
-    data_full = prepare_data(2020)
+    data_full = prepare_data()
 
     src = make_dataset(60000,10000,data_full)
 

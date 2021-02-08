@@ -19,9 +19,6 @@ from bokeh.transform import transform
 from bokeh.layouts import column
 
 
-from gettsim import set_up_policy_environment
-from gettsim.taxes.eink_st import st_tarif
-
 from Scripts.plotstyle import plotstyle
 
 def lorenz_tab(plot_dict):

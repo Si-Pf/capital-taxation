@@ -19,8 +19,6 @@ from bokeh.transform import stack, factor_cmap
 from bokeh.models.widgets import Tabs
 from bokeh.palettes import Category10
 
-from gettsim import set_up_policy_environment
-from gettsim.taxes.eink_st import st_tarif
 
 from Scripts.plotstyle import plotstyle
 

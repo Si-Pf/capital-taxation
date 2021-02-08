@@ -1,20 +1,23 @@
-FROM heroku/miniconda:3
-
-
+FROM continuumio/miniconda3
 
 # Grab requirements.txt.
 ADD ./requirements.txt /tmp/requirements.txt
+ADD ./runtime.txt /tmp/runtime.txt
 
 
 
 # Install dependencies
 RUN pip install -qr /tmp/requirements.txt
 
-RUN conda install -c gettsim gettsim
+
 
 
 # Add our code
-ADD ./ /opt/
-WORKDIR /opt/
+ADD ./App /opt/App/
+WORKDIR /opt/App
 
-CMD bokeh serve --port=$PORT --allow-websocket-origin=tax-reform.herokuapp.com --address=0.0.0.0 --use-xheaders App
+RUN conda config --add channels conda-forge \
+    && conda install -c gettsim gettsim 
+
+
+CMD bokeh serve --port=$PORT --num-procs=0 --allow-websocket-origin=* --address=0.0.0.0 --use-xheaders ./App

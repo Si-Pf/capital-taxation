@@ -5,12 +5,7 @@ from bokeh.models import NumeralTickFormatter
 from bokeh.models import Div
 from bokeh.layouts import column
 
-# Each tab is drawn by one script
-from Scripts.tax_revenue import tax_revenue
-from Scripts.heatmap import heatmap_tab
-from Scripts.individual_view import individual_view
-from Scripts.lorenz_curves import lorenz_tab
-from Scripts.behavioral_response import behavioral_response
+
 
 # Create a dictionairy to store all plot titles, axes etc. 
 plot_list = ["tax_revenue","Impact_heatmap","individual_view","lorenz_curves", "behavioral_response"]
@@ -25,7 +20,12 @@ attribute_dict = {"current_system":["Separate income and capital tax","","taxabl
 plot_dict = {p:{a:attribute_dict[p][counter] for counter,a in enumerate(plot_attributes)} for p in plot_list}
 
 
-
+# Each tab is drawn by one script
+from Scripts.tax_revenue import tax_revenue
+from Scripts.heatmap import heatmap_tab
+from Scripts.individual_view import individual_view
+from Scripts.lorenz_curves import lorenz_tab
+from Scripts.behavioral_response import behavioral_response
 
 #Call tab functions
 tab1 = lorenz_tab(plot_dict)
