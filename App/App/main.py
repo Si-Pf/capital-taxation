@@ -41,7 +41,7 @@ attribute_dict = {
     ],
     "individual_view": [
         "Individual view",
-        "Separate labor and capital taxation (S) vs. integrated income taxation (I)",
+        "Status quo labor and capital taxation (S) vs. Reform integrated income taxation (R)",
         "Value in €",
         "",
         "0€",
@@ -105,7 +105,17 @@ tabs = Tabs(tabs=[tab1, tab2, tab3, tab4, tab5])
 header = Div(
     text="""<h1>Comparing Germanys flat capital income tax to an integrated income tax</h1>""",
     width=900,
-    height=90,
+    height=80,
 )
 
-curdoc().add_root(column(header, tabs))
+intro = Div(
+    text="""This dashboard is part of a master thesis in economics. It compares on several tabs 
+    how capital income is taxed currently in Germany (Status Quo) with a potential reform. 
+    Currently capital income is taxed with a flat final tax of 25%, the considered reform would 
+    integrate capital income into the progressive income tax schedule. Similar to the prior 
+    policy only 60 percent of dividends would be taxable to limit the double taxation of corporate 
+    income.""",
+    width=800,
+    height=100,
+)
+curdoc().add_root(column(header, intro, tabs))

@@ -172,7 +172,7 @@ def tax_revenue(plot_dict):
 
     table_title = Div(text="""<b>Source data</b>""", width=800, height=20)
     reference = Div(
-        text="""Data from <a href="http://hdl.handle.net/10419/172793">Bach and Buslei 2017</a> table 4-5.
+        text="""Data from <a href="http://hdl.handle.net/10419/172793">Bach and Buslei 2017</a> table 4-5 and own calculations.
          Simulated scenario where the capital income tax is included in the progressive income taxation,
          itemized deductions for capital income and "Teileinkünfteverfahren" for dividends are reintroduced.""",
         width=800,

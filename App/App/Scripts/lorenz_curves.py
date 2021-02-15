@@ -117,7 +117,7 @@ def lorenz_tab(plot_dict):
     plot, table = make_plot(src, src_raw)
 
     table_title = Div(text="""<b>Source data</b>""",width=800, height=20)
-    reference = Div(text="""Data from <a href="http://hdl.handle.net/10419/172793">Bach and Buslei 2017</a> table 3-2. Columns show average taxable income per decile in Euro. Capital income calculated as avg. capital tax / 0.26375.""",width=800, height=80)
+    reference = Div(text="""Data from <a href="http://hdl.handle.net/10419/172793">Bach and Buslei 2017</a> table 3-2 and own calculations. Columns show average taxable income per decile in Euro. Capital income calculated as avg. capital tax / 0.26375.""",width=800, height=80)
 
     #gini_label = Label(x=0,y=0,x_units='screen', y_units='screen',text="Gini coefficient: "+str(gini)+ "(current system) " + str(gini_simulated) + "(simulated system)")
     #gini_simulated_label = Label(text="Gini (simulated system): "+str(gini_simulated),  text_font_size=9)

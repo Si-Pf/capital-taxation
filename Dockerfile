@@ -7,7 +7,7 @@ ADD ./runtime.txt /tmp/runtime.txt
 
 
 # Install dependencies
-RUN pip install -qr /tmp/requirements.txt
+RUN pip install -r /tmp/requirements.txt
 
 
 
