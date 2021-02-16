@@ -216,7 +216,7 @@ def behavioral_response(plot_dict):
     def make_plot(src, src2):
         # plot 1
         p = figure(
-            plot_width=800, plot_height=400, x_range=FactorRange(*src.data["factor"]),
+            plot_width=800, plot_height=400, x_range=FactorRange(*src.data["factor"]), tooltips="@factor: @change{0€}",
         )
 
         p.vbar(
@@ -259,6 +259,7 @@ def behavioral_response(plot_dict):
             plot_height=400,
             y_range=src2.data["deciles"],
             x_range=[-180, 187],
+            tooltips="@deciles: @aggr_delta_after_eti{0€}",
         )
 
         labels2 = LabelSet(

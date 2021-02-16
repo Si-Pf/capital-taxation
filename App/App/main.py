@@ -110,11 +110,10 @@ header = Div(
 
 intro = Div(
     text="""This dashboard is part of a master thesis in economics. It compares on several tabs 
-    how capital income is taxed currently in Germany (Status Quo) with a potential reform. 
+    how capital income is taxed currently in Germany (Status Quo) with a potential alternative policy (Reform). 
     Currently capital income is taxed with a flat final tax of 25%, the considered reform would 
-    integrate capital income into the progressive income tax schedule. Similar to the prior 
-    policy only 60 percent of dividends would be taxable to limit the double taxation of corporate 
-    income.""",
+    integrate capital income into the progressive income tax schedule with a 60 percent taxable rule
+    for dividends to limit the double taxation of paid out corporate income.""",
     width=800,
     height=100,
 )

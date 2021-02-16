@@ -199,7 +199,7 @@ def individual_view(plot_dict):
                 
         ]
 
-        data_table = DataTable(source=src, columns=columns, width=900, height=350, index_position=None, autosize_mode="fit_columns")
+        data_table = DataTable(source=src, columns=columns, width=900, height=200, index_position=None, autosize_mode="fit_columns")
 
         plot = plotstyle(p, plot_dict)
 
@@ -251,10 +251,10 @@ def individual_view(plot_dict):
     table_title = Div(text="""<b>Source data</b>""",width=800, height=20)
 
     reference = Div(text="""Data from own calculations. Assumed is a uniform deduction of 20% of labor income
-                         (status quo) and 20% of total income (reform). For the status quo """,
+                         (status quo) and 20% of total income (reform). The tax amounts are calculated with GETTSIM.""",
                          width=800, height=80)
 
-    layout = column(LI_selection, CI_selection, p, table_title, table)
+    layout = column(LI_selection, CI_selection, p, table_title, table, reference)
 
     tab = Panel(child=layout, title="Net incomes")
 
