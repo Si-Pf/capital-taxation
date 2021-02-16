@@ -20,8 +20,8 @@ def individual_view(plot_dict):
 
     def prepare_data():
 
-        LI = pd.Series(data=range(0,2500001))  # Labor Income
-        CI = pd.Series(data=range(0,1000001))  # Capital Income
+        LI = pd.Series(data=range(0,250001,1000))  # Labor Income
+        CI = pd.Series(data=range(0,100001,500))  # Capital Income
         #np.linspace(-1, 300001, 300001)
         LD = 0.2 * LI  # To do add slider?
         TTI = LI + CI  # Total Income
@@ -54,7 +54,7 @@ def individual_view(plot_dict):
         # Calculate variables integrated taxes
         # D = d*(LI+CI) #Dedcutions
 
-        T = (TI * Tau_integrated)  # Total tax
+        T = (TI * Tau_integrated).round(2)  # Total tax
 
         # taxable capital income
         LT = (TLI * Tau_flat).round(2)  # Labor income tax
@@ -69,6 +69,8 @@ def individual_view(plot_dict):
         B = [0] * len(LI)
 
         # columns = [CI,LI,CD,LD,TCI,TLI,CT,LT,NCI,NLI,NI,T,TI]
+
+        data_full = pd.DataFrame()
 
         data_full = {
             "x_range": [
@@ -117,22 +119,15 @@ def individual_view(plot_dict):
         return data_full
 
     def make_dataset(LI, CI, data_full):
-        Total_income_index, selected_data = int((CI + LI) / 2), {}
+        Total_income_index = int((CI + LI) / 2)
 
-        # Parameters depending on LI only:
+        selected_data_li = {i:[data_full[i][j][LI] for j in range(6)] for i in data_full["LI_list"]}
+        selected_data_ci = {i:[data_full[i][j][CI] for j in range(6)] for i in data_full["CI_list"]}
+        selected_data_t = {i:[data_full[i][j][Total_income_index] for j in range(6)] for i in data_full["Total_list"]}
 
-        for i in data_full["LI_list"]:
-            selected_data[i] = [data_full[i][j][LI] for j in range(6)]
-
-        # Parameters depending on CI only:
-        for i in data_full["CI_list"]:
-            selected_data[i] = [data_full[i][j][CI] for j in range(6)]
-
-        # Parameters depending on TI & LI:
-        for i in data_full["Total_list"]:
-            selected_data[i] = [data_full[i][j][Total_income_index] for j in range(6)]
-
-        reordered_dict = {k: selected_data[k] for k in data_full["Final_order"]}
+        selected_data_t.update(selected_data_li)
+        selected_data_t.update(selected_data_ci)
+        reordered_dict = {k: selected_data_t[k] for k in data_full["Final_order"]}
         reordered_dict["x_range"] = data_full["x_range"]
 
         return ColumnDataSource(reordered_dict)
@@ -143,6 +138,7 @@ def individual_view(plot_dict):
             plot_height=400,
             x_range=src.data["x_range"],
             y_range=(0, 360000),
+            tooltips="$name: @$name{0€}"
         )
 
         y_list = src.column_names
@@ -206,8 +202,8 @@ def individual_view(plot_dict):
         return plot, data_table
 
     def update_plot(attr, old, new):
-        LI = LI_selection.value
-        CI = CI_selection.value
+        LI = int(LI_selection.value/1000)
+        CI = int(CI_selection.value/500)
         new_src = make_dataset(LI, CI, data_full)
 
         src.data.update(new_src.data)
@@ -239,7 +235,7 @@ def individual_view(plot_dict):
 
     data_full = prepare_data()
 
-    src = make_dataset(60000, 10000, data_full)
+    src = make_dataset(60, 20, data_full)
 
     p, table = make_plot(src)
 
