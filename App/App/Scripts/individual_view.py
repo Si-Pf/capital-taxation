@@ -244,7 +244,7 @@ def individual_view(plot_dict):
     p.add_layout(Net_income_s)
     p.add_layout(Net_income_i)
 
-    table_title = Div(text="""<b>Source data</b>""",width=800, height=20)
+    table_title = Div(text="""<b>Source data: Individual mechanical impact of the reform (in €)</b>""",width=800, height=20)
 
     reference = Div(text="""Data from own calculations. Assumed is a uniform deduction of 20% of labor income
                          (status quo) and 20% of total income (reform). The tax amounts are calculated with GETTSIM.""",

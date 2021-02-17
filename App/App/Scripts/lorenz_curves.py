@@ -97,9 +97,9 @@ def lorenz_tab(plot_dict):
         # Table to display source data
 
         columns = [TableColumn(field="deciles",  title = "Deciles"),
-        TableColumn(field="total_income", title="Total income (pre tax)"),
-        TableColumn(field="labor_income", title="Labor income (pre tax)"),
-        TableColumn(field="capital_income", title="Capital income (pre tax)"),
+        TableColumn(field="total_income", title="Total income (before tax)"),
+        TableColumn(field="labor_income", title="Labor income (before tax)"),
+        TableColumn(field="capital_income", title="Capital income (before tax)"),
         TableColumn(field="net_income", title="Total income (after tax)"),
         TableColumn(field="weights", title="Decile weights"),
         
@@ -116,7 +116,7 @@ def lorenz_tab(plot_dict):
 
     plot, table = make_plot(src, src_raw)
 
-    table_title = Div(text="""<b>Source data</b>""",width=800, height=20)
+    table_title = Div(text="""<b>Source data: Average (taxable) income per decile (in €)</b>""",width=800, height=20)
     reference = Div(text="""Data from <a href="http://hdl.handle.net/10419/172793">Bach and Buslei 2017</a> table 3-2 and own calculations. Columns show average taxable income per decile in Euro. Capital income calculated as avg. capital tax / 0.26375.""",width=800, height=80)
 
     #gini_label = Label(x=0,y=0,x_units='screen', y_units='screen',text="Gini coefficient: "+str(gini)+ "(current system) " + str(gini_simulated) + "(simulated system)")

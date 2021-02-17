@@ -146,7 +146,7 @@ def tax_revenue(plot_dict):
         columns = [
             TableColumn(field="deciles", title="Deciles"),
             TableColumn(
-                field="delta_tax_burden", title="Tax revenue change (in Mio. Euro)"
+                field="delta_tax_burden", title="Tax revenue change (in Million €)"
             ),
             TableColumn(
                 field="Delta_ETR",

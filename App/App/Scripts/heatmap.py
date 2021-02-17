@@ -122,7 +122,7 @@ def heatmap_tab(plot_dict):
             ticker=BasicTicker(desired_num_ticks=20),
             formatter=NumeralTickFormatter(format="0€"),
             label_standoff=12,
-            title="Impact in €",
+            title="Impact (in €)",
         )
         p.add_layout(color_bar, "right")
         p.add_layout(labels)    
