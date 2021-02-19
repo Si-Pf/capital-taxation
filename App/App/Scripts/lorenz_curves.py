@@ -141,7 +141,12 @@ def lorenz_tab(plot_dict):
         ]
 
         data_table = DataTable(
-            source=src_raw, columns=columns, width=800, height=350, selectable=False
+            source=src_raw,
+            columns=columns,
+            width=800,
+            height=350,
+            selectable=False,
+            autosize_mode="fit_columns",
         )
 
         return plot, data_table
