@@ -216,7 +216,10 @@ def behavioral_response(plot_dict):
     def make_plot(src, src2):
         # plot 1
         p = figure(
-            plot_width=800, plot_height=400, x_range=FactorRange(*src.data["factor"]), tooltips="@factor: @change{0€}",
+            plot_width=800,
+            plot_height=400,
+            x_range=FactorRange(*src.data["factor"]),
+            tooltips="@factor: @change{0€}",
         )
 
         p.vbar(
@@ -318,20 +321,11 @@ def behavioral_response(plot_dict):
     recovery_selection.on_change("value", update_plot)
 
     # Check if pre-processed file is already available
-    if os.path.isfile("data.h5"):
-        data_store = pd.HDFStore("data.h5")
-
-        # Retrieve data using key
-        data_full = data_store["behavioral"]
-        data_store.close()
+    if os.path.isfile("data"):
+        data_full = pd.read_pickle("data")
     else:
         data_full = prepare_data()
-        # Create storage object with filename `processed_data`
-        data_store = pd.HDFStore("data.h5")
-
-        # Put DataFrame into the object setting the key as 'preprocessed_df'
-        data_store["behavioral"] = data_full
-        data_store.close()
+        data_full.to_pickle("data")
 
     src, src2 = make_dataset(100, 10, data_full)
 

@@ -1,18 +1,17 @@
 from Scripts.plotstyle import plotstyle
 
-import numpy as np
 import pandas as pd
 from bokeh.layouts import column
 from bokeh.models import ColumnDataSource
+from bokeh.models import DataTable
+from bokeh.models import Div
 from bokeh.models import Label
 from bokeh.models import Panel
-from bokeh.models import Div
-from bokeh.models import DataTable, TableColumn
+from bokeh.models import TableColumn
 from bokeh.models.widgets import Slider
 from bokeh.plotting import figure
 from gettsim import set_up_policy_environment
 from gettsim.taxes.eink_st import st_tarif
-
 
 
 def individual_view(plot_dict):
@@ -20,9 +19,9 @@ def individual_view(plot_dict):
 
     def prepare_data():
 
-        LI = pd.Series(data=range(0,250001,1000))  # Labor Income
-        CI = pd.Series(data=range(0,125001,500))  # Capital Income
-        #np.linspace(-1, 300001, 300001)
+        LI = pd.Series(data=range(0, 250001, 1000))  # Labor Income
+        CI = pd.Series(data=range(0, 125001, 500))  # Capital Income
+        # np.linspace(-1, 300001, 300001)
         LD = 0.2 * LI  # To do add slider?
         TTI = LI + CI  # Total Income
         TD = 0.2 * TTI  # To do add realistic assumptions
@@ -36,18 +35,18 @@ def individual_view(plot_dict):
         # labor_income = pd.Series(data=[LI])
         # integrated_income = pd.Series(data=[LI+CI])
         Tau_flat = (
-            st_tarif(TLI, policy_params["eink_st"]) / TLI
-        ).fillna(0).round(2)  # Income tax rate - flat
+            (st_tarif(TLI, policy_params["eink_st"]) / TLI).fillna(0).round(2)
+        )  # Income tax rate - flat
 
         Tau_integrated = (
-            st_tarif(TI, policy_params["eink_st"]) / TI
-        ).fillna(0).round(2)  # Income tax rate - integrated
-        
+            (st_tarif(TI, policy_params["eink_st"]) / TI).fillna(0).round(2)
+        )  # Income tax rate - integrated
+
         CD = pd.Series(
             data=[policy_params["eink_st_abzuege"]["sparerpauschbetrag"]] * len(LI)
         )  # Capital income deductions
 
-        CTau = policy_params["abgelt_st"]["abgelt_st_satz"]  # Capital income tax rate
+        CTau = policy_params["abgelt_st"]["abgelt_st_satz"]  # Capital tax rate
 
         TCI = CI - CD  # taxable capital income
         TCI[TCI < 0] = 0  # replace negative taxable income
@@ -63,14 +62,10 @@ def individual_view(plot_dict):
         # Net incomes
         NCI = TCI - CT  # Capital
         NLI = (TLI - LT).round(2)  # Labor
-        NI = (TI - T).round(2) # Total
+        NI = (TI - T).round(2)  # Total
 
         # blank placeholder
         B = [0] * len(LI)
-
-        # columns = [CI,LI,CD,LD,TCI,TLI,CT,LT,NCI,NLI,NI,T,TI]
-
-        data_full = pd.DataFrame()
 
         data_full = {
             "x_range": [
@@ -121,9 +116,16 @@ def individual_view(plot_dict):
     def make_dataset(LI, CI, data_full):
         Total_income_index = int((CI + LI) / 2)
 
-        selected_data_li = {i:[data_full[i][j][LI] for j in range(6)] for i in data_full["LI_list"]}
-        selected_data_ci = {i:[data_full[i][j][CI] for j in range(6)] for i in data_full["CI_list"]}
-        selected_data_t = {i:[data_full[i][j][Total_income_index] for j in range(6)] for i in data_full["Total_list"]}
+        selected_data_li = {
+            i: [data_full[i][j][LI] for j in range(6)] for i in data_full["LI_list"]
+        }
+        selected_data_ci = {
+            i: [data_full[i][j][CI] for j in range(6)] for i in data_full["CI_list"]
+        }
+        selected_data_t = {
+            i: [data_full[i][j][Total_income_index] for j in range(6)]
+            for i in data_full["Total_list"]
+        }
 
         selected_data_t.update(selected_data_li)
         selected_data_t.update(selected_data_ci)
@@ -138,7 +140,7 @@ def individual_view(plot_dict):
             plot_height=400,
             x_range=src.data["x_range"],
             y_range=(0, 360000),
-            tooltips="$name: @$name{0€}"
+            tooltips="$name: @$name{0€}",
         )
 
         y_list = src.column_names
@@ -190,20 +192,27 @@ def individual_view(plot_dict):
         p.legend.orientation = "horizontal"
 
         # Table to display source data
-        
-        columns = [TableColumn(field="x_range",  title = "Bar", width=None)]+[TableColumn(field=i,  title = i, width=None) for i in y_list
-                
+
+        columns = [TableColumn(field="x_range", title="Bar", width=None)] + [
+            TableColumn(field=i, title=i, width=None) for i in y_list
         ]
 
-        data_table = DataTable(source=src, columns=columns, width=900, height=200, index_position=None, autosize_mode="fit_columns")
+        data_table = DataTable(
+            source=src,
+            columns=columns,
+            width=900,
+            height=200,
+            index_position=None,
+            autosize_mode="fit_columns",
+        )
 
         plot = plotstyle(p, plot_dict)
 
         return plot, data_table
 
     def update_plot(attr, old, new):
-        LI = int(LI_selection.value/1000)
-        CI = int(CI_selection.value/500)
+        LI = int(LI_selection.value / 1000)
+        CI = int(CI_selection.value / 500)
         new_src = make_dataset(LI, CI, data_full)
 
         src.data.update(new_src.data)
@@ -244,11 +253,19 @@ def individual_view(plot_dict):
     p.add_layout(Net_income_s)
     p.add_layout(Net_income_i)
 
-    table_title = Div(text="""<b>Source data: Individual mechanical impact of the reform (in €)</b>""",width=800, height=20)
+    table_title = Div(
+        text="""<b>Source data: Individual mechanical impact of the reform (in €)</b>""",
+        width=800,
+        height=20,
+    )
 
-    reference = Div(text="""Data from own calculations. Assumed is a uniform deduction of 20% of labor income
-                         (status quo) and 20% of total income (reform). The tax amounts are calculated with GETTSIM.""",
-                         width=800, height=80)
+    reference = Div(
+        text="""Data from own calculations. Assumed is a uniform deduction of 20% of
+        labor income (status quo) and 20% of total income (reform). The tax amounts
+        are calculated with GETTSIM.""",
+        width=800,
+        height=80,
+    )
 
     layout = column(LI_selection, CI_selection, p, table_title, table, reference)
 
