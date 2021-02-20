@@ -172,7 +172,9 @@ def heatmap_tab(plot_dict):
 
         hover = HoverTool(
             tooltips=[
-                ( 'Impact to tax burden',   "@{Change to tax burden}{0€}€"   ),
+                ( 'Impact to tax burden',   "@{Change to tax burden}{0€} €"   ),
+                ( 'Taxable labor income',   "$x{0€} €"   ),
+                 ( 'Taxable capital income',   "$y{0€} €"   ),
             
             ],
             names = [str(i) for i in line_source_dict.keys()]
