@@ -83,6 +83,9 @@ attribute_dict = {
         "",
     ],
 }
+
+print("{} INFO - Creating a plot dict".format(datetime.now(tz)))
+
 plot_dict = {
     p: {a: attribute_dict[p][counter] for counter, a in enumerate(plot_attributes)}
     for p in plot_list
