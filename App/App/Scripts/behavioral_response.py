@@ -322,11 +322,11 @@ def behavioral_response(plot_dict):
     recovery_selection.on_change("value", update_plot)
 
     # Check if pre-processed file is already available
-    if os.path.isfile("data"):
-        data_full = pd.read_pickle("data")
-    else:
-        data_full = prepare_data()
-        data_full.to_pickle("data")
+    #if os.path.isfile("data"):
+        #data_full = pd.read_pickle("data")
+    #else:
+    data_full = prepare_data()
+        #data_full.to_pickle("data")
 
     src, src2 = make_dataset(100, 10, data_full)
 
