@@ -144,11 +144,16 @@ def prepare_data():
 
         return data_full
 
-
+print("Call prepare_data")
+    
 data_full = prepare_data()
+
+print("prepare_data runs successfully. Saving data as data.h5")
 
 # Create storage object with filename `processed_data`
 data_store = pd.HDFStore("data.h5")
+
+print("data.h5 is saved successfully")
 
 # Put DataFrame into the object setting the key as 'preprocessed_df'
 data_store["preprocessed_df"] = data_full
