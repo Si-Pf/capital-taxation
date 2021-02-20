@@ -140,7 +140,7 @@ def individual_view(plot_dict):
             plot_height=400,
             x_range=src.data["x_range"],
             y_range=(0, 360000),
-            tooltips="$name: @$name{0€}",
+            tooltips="$name: @$name{0€} €",
         )
 
         y_list = src.column_names

@@ -115,7 +115,7 @@ def tax_revenue(plot_dict):
         )
 
     def make_plot(src):
-        p = figure(plot_width=800, plot_height=400, y_range=src.data["deciles"], tooltips="@deciles: @delta_tax_burden{0€}")
+        p = figure(plot_width=800, plot_height=400, y_range=src.data["deciles"], tooltips="@deciles: @delta_tax_burden{0€} Mio.€")
 
         labels = LabelSet(
             x="delta_tax_burden",

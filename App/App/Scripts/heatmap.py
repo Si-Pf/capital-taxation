@@ -10,6 +10,7 @@ from bokeh.models import LabelSet
 from bokeh.models import LinearColorMapper
 from bokeh.models import NumeralTickFormatter
 from bokeh.models import Panel
+from bokeh.models import HoverTool
 from bokeh.palettes import Turbo256
 from bokeh.plotting import figure
 from bokeh.transform import transform
@@ -121,6 +122,7 @@ def heatmap_tab(plot_dict):
             x_range=(0, 310000),
             y_range=(0, 100000),
             tools="save",
+            
         )
 
         p.rect(
@@ -165,7 +167,18 @@ def heatmap_tab(plot_dict):
                 source=line_source_dict[i],
                 line_width=1,
                 line_color="grey",
+                name=str(i)
             )
+
+        hover = HoverTool(
+            tooltips=[
+                ( 'Change in tax burden:',   "@{Change to tax burden}{0€}€"   ),
+            
+            ],
+            names = [str(i) for i in line_source_dict.keys()]
+            
+        )
+        p.add_tools(hover)
 
         p.xaxis.tags = ["numeric"]
 
