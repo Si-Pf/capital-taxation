@@ -3,7 +3,10 @@ from bokeh.io import curdoc
 from bokeh.layouts import column
 from bokeh.models import Div
 from bokeh.models.widgets import Tabs
+from datetime import datetime
+import pytz
 
+tz = pytz.timezone('Europe/Berlin')
 
 # Create a dictionairy to store all plot titles, axes etc.
 plot_list = [
@@ -93,6 +96,8 @@ from Scripts.individual_view import individual_view
 from Scripts.lorenz_curves import lorenz_tab
 from Scripts.behavioral_response import behavioral_response
 
+print("{} INFO - Server receives request".format(datetime.now(tz)))
+
 # Call tab functions
 tab1 = lorenz_tab(plot_dict)
 tab2 = individual_view(plot_dict)
@@ -118,6 +123,6 @@ intro = Div(
     height=100,
 )
 
-print("INFO - Server is receiving request")
+print("{} INFO - Server completes processing request".format(datetime.now(tz)))
 
 curdoc().add_root(column(header, intro, tabs))
