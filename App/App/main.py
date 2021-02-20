@@ -117,4 +117,7 @@ intro = Div(
     width=800,
     height=100,
 )
+
+print("INFO - Server is receiving request")
+
 curdoc().add_root(column(header, intro, tabs))
