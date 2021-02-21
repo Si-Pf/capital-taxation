@@ -19,8 +19,8 @@ def individual_view(plot_dict):
 
     def prepare_data():
 
-        LI = pd.Series(data=range(0, 250001, 1000))  # Labor Income
-        CI = pd.Series(data=range(0, 125001, 500))  # Capital Income
+        LI = pd.Series(data=range(0, 250001, 500))  # Labor Income
+        CI = pd.Series(data=range(0, 250001, 500))  # Capital Income
         # np.linspace(-1, 300001, 300001)
         LD = 0.2 * LI  # To do add slider?
         TTI = LI + CI  # Total Income
@@ -211,7 +211,7 @@ def individual_view(plot_dict):
         return plot, data_table
 
     def update_plot(attr, old, new):
-        LI = int(LI_selection.value / 1000)
+        LI = int(LI_selection.value / 500)
         CI = int(CI_selection.value / 500)
         new_src = make_dataset(LI, CI, data_full)
 
