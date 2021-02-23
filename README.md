@@ -1,2 +1,6 @@
 # Comparing Germanys' flat capital income tax to an integrated income tax
 A bokeh dashboard exploring the current German capital tax compared to a potential tax reform. Part of a master thesis in economics.
+
+To run the dashboard locally use: `conda env create -f environment.yml` from the root directory
+Then: `cd ./App`
+Then run `bokeh serve --show App`
