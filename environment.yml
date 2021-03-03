@@ -3,7 +3,7 @@ channels:
   - defaults
   - gettsim
 dependencies:
-  - bokeh >= 2.2.0
+  - bokeh >= 2.3.0
   - numpy >= 1.19.2
   - pandas >= 1.2.1
   - gettsim >= 0.4

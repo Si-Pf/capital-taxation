@@ -16,7 +16,8 @@ def lorenz_tab(plot_dict):
 
     def prepare_data():
 
-        deciles = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.95, 0.99, 1]
+        deciles = [0,0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.95, 0.99, 1]
+        labels = ["0","0-0.1","0.1-0.2","0.2-0.3","0.3-0.4","0.4-0.5","0.5-0.6","0.6-0.7","0.7-0.8","0.8-0.9","0.9-0.95","0.95-0.99","0.99-1"]
         weights = pd.Series(
             data=[0, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.05, 0.04, 0.01]
         )
@@ -74,7 +75,7 @@ def lorenz_tab(plot_dict):
         }
 
         raw_dict = {
-            "deciles": deciles,
+            "deciles": labels,
             "weights": weights,
             "capital_income_tax": capital_income_tax,
             "total_income": total_income,

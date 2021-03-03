@@ -8,6 +8,7 @@ from bokeh.models import Div
 from bokeh.models import Label
 from bokeh.models import Panel
 from bokeh.models import TableColumn
+from bokeh.models import Legend
 from bokeh.models.widgets import Slider
 from bokeh.plotting import figure
 from gettsim import set_up_policy_environment
@@ -136,7 +137,7 @@ def individual_view(plot_dict):
 
     def make_plot(src):
         p = figure(
-            plot_width=800,
+            plot_width=1000,
             plot_height=400,
             x_range=src.data["x_range"],
             y_range=(0, 360000),
@@ -179,22 +180,44 @@ def individual_view(plot_dict):
             "#2ca02c",
             "#2ca02c",
         ]
-        p.vbar_stack(
+        renderers = p.vbar_stack(
             y_list,
             x="x_range",
             width=0.5,
             source=src,
             color=color,
             hatch_pattern=hatch_pattern,
-            legend_label=y_list,
+            #legend_label=y_list,
             line_color=None,
         )
-        p.legend.orientation = "horizontal"
+        #p.legend.orientation = "horizontal"
 
+        labels = [
+                "Capital income",
+                "Labor income",
+                "Capital income deduction",
+                "Taxable capital income",
+                "Taxable labor income",
+                "Taxable total income",
+                "Labor income deduction",
+                "Total income deduction",
+                "Capital income tax",
+                "Net capital income",
+                "Net labor income",
+                "Labor income tax",
+                "Net total income",
+                "Total income tax",
+            ]
+
+        legend = Legend(items=[
+            (labels[count] , [r]) for count, r in enumerate(renderers)
+        ], location="center")
+
+        p.add_layout(legend, "right")
         # Table to display source data
 
-        columns = [TableColumn(field="x_range", title="Bar", width=None)] + [
-            TableColumn(field=i, title=i, width=None) for i in y_list
+        columns = [TableColumn(field="x_range", title="Bar")] + [
+            TableColumn(field=i, title=i) for i in y_list
         ]
 
         data_table = DataTable(
