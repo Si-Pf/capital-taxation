@@ -1,119 +1,18 @@
 from Scripts.plotstyle import plotstyle
 
-import pandas as pd
 from bokeh.layouts import column
 from bokeh.models import ColumnDataSource
 from bokeh.models import DataTable
 from bokeh.models import Div
 from bokeh.models import Label
+from bokeh.models import Legend
 from bokeh.models import Panel
 from bokeh.models import TableColumn
-from bokeh.models import Legend
 from bokeh.models.widgets import Slider
 from bokeh.plotting import figure
-from gettsim import set_up_policy_environment
-from gettsim.taxes.eink_st import st_tarif
 
 
-def individual_view(plot_dict):
-    plot_dict = plot_dict["individual_view"]
-
-    def prepare_data():
-
-        LI = pd.Series(data=range(0, 250001, 500))  # Labor Income
-        CI = pd.Series(data=range(0, 250001, 500))  # Capital Income
-        # np.linspace(-1, 300001, 300001)
-        LD = 0.2 * LI  # To do add slider?
-        TTI = LI + CI  # Total Income
-        TD = 0.2 * TTI  # To do add realistic assumptions
-        TI = TTI - TD  # taxable income
-
-        # Calculate variables separated taxes
-        TLI = LI - LD  # taxable labor income
-
-        # Get relevant policy params from GETTSIM
-        policy_params, policy_functions = set_up_policy_environment(2020)
-        # labor_income = pd.Series(data=[LI])
-        # integrated_income = pd.Series(data=[LI+CI])
-        Tau_flat = (
-            (st_tarif(TLI, policy_params["eink_st"]) / TLI).fillna(0).round(2)
-        )  # Income tax rate - flat
-
-        Tau_integrated = (
-            (st_tarif(TI, policy_params["eink_st"]) / TI).fillna(0).round(2)
-        )  # Income tax rate - integrated
-
-        CD = pd.Series(
-            data=[policy_params["eink_st_abzuege"]["sparerpauschbetrag"]] * len(LI)
-        )  # Capital income deductions
-
-        CTau = policy_params["abgelt_st"]["abgelt_st_satz"]  # Capital tax rate
-
-        TCI = CI - CD  # taxable capital income
-        TCI[TCI < 0] = 0  # replace negative taxable income
-        # Calculate variables integrated taxes
-        # D = d*(LI+CI) #Dedcutions
-
-        T = (TI * Tau_integrated).round(2)  # Total tax
-
-        # taxable capital income
-        LT = (TLI * Tau_flat).round(2)  # Labor income tax
-        CT = TCI * CTau  # Capital income tax
-
-        # Net incomes
-        NCI = TCI - CT  # Capital
-        NLI = (TLI - LT).round(2)  # Labor
-        NI = (TI - T).round(2)  # Total
-
-        # blank placeholder
-        B = [0] * len(LI)
-
-        data_full = {
-            "x_range": [
-                "Gross income (S)",
-                "Taxable income (S)",
-                "Net income (S)",
-                "Gross income (R)",
-                "Taxable income (R)",
-                "Net income (R)",
-            ],
-            "CI": [CI, B, B, CI, B, B],
-            "LI": [LI, B, B, LI, B, B],
-            "TI": [B, B, B, B, TI, B],
-            "NI": [B, B, B, B, B, NI],
-            "T": [B, B, B, B, B, T],
-            "CD": [B, CD, CD, B, B, B],
-            "LD": [B, LD, B, B, B, B],
-            "TCI": [B, TCI, B, B, B, B],
-            "TLI": [B, TLI, B, B, B, B],
-            "CT": [B, B, CT, B, B, B],
-            "LT": [B, B, LT, B, B, B],
-            "NCI": [B, B, NCI, B, B, B],
-            "NLI": [B, B, NLI, B, B, B],
-            "TD": [B, B, B, B, TD, B],
-            "LI_list": ["LI", "TLI", "LT", "NLI", "LD"],
-            "CI_list": ["CI", "CD", "TCI", "CT", "NCI"],
-            "Total_list": ["TI", "NI", "T", "TD"],
-            "Final_order": [
-                "CI",
-                "LI",
-                "CD",
-                "TCI",
-                "TLI",
-                "TI",
-                "LD",
-                "TD",
-                "CT",
-                "NCI",
-                "NLI",
-                "LT",
-                "NI",
-                "T",
-            ],
-        }
-
-        return data_full
-
+def individual_view(plot_dict, data):
     def make_dataset(LI, CI, data_full):
         Total_income_index = int((CI + LI) / 2)
 
@@ -187,33 +86,33 @@ def individual_view(plot_dict):
             source=src,
             color=color,
             hatch_pattern=hatch_pattern,
-            #legend_label=y_list,
             line_color=None,
         )
-        #p.legend.orientation = "horizontal"
 
         labels = [
-                "Capital income",
-                "Labor income",
-                "Capital income deduction",
-                "Taxable capital income",
-                "Taxable labor income",
-                "Taxable total income",
-                "Labor income deduction",
-                "Total income deduction",
-                "Capital income tax",
-                "Net capital income",
-                "Net labor income",
-                "Labor income tax",
-                "Net total income",
-                "Total income tax",
-            ]
+            "Capital income",
+            "Labor income",
+            "Capital income deduction",
+            "Taxable capital income",
+            "Taxable labor income",
+            "Taxable total income",
+            "Labor income deduction",
+            "Total income deduction",
+            "Capital income tax",
+            "Net capital income",
+            "Net labor income",
+            "Labor income tax",
+            "Net total income",
+            "Total income tax",
+        ]
 
-        legend = Legend(items=[
-            (labels[count] , [r]) for count, r in enumerate(renderers)
-        ], location="center")
+        legend = Legend(
+            items=[(labels[count], [r]) for count, r in enumerate(renderers)],
+            location="center",
+        )
 
         p.add_layout(legend, "right")
+
         # Table to display source data
 
         columns = [TableColumn(field="x_range", title="Bar")] + [
@@ -239,6 +138,8 @@ def individual_view(plot_dict):
         new_src = make_dataset(LI, CI, data_full)
 
         src.data.update(new_src.data)
+
+        # Dynamic update for the net income labels
         Net_income_s.text = (
             "Net income: " + str(int(src.data["NLI"][2] + src.data["NCI"][2])) + "€"
         )
@@ -255,6 +156,7 @@ def individual_view(plot_dict):
         Net_income_i.text = "Net income: " + str(int(src.data["NI"][5])) + "€"
         Net_income_i.y = int(src.data["NI"][5] + src.data["T"][5]) + 10000
 
+    # Sliders for dynamic update
     LI_selection = Slider(
         start=0, end=250000, value=60000, step=1000, title="Labor income (€)"
     )
@@ -265,12 +167,13 @@ def individual_view(plot_dict):
     CI_selection.on_change("value", update_plot)
     LI_selection.on_change("value", update_plot)
 
-    data_full = prepare_data()
+    data_full = data
 
     src = make_dataset(60, 20, data_full)
 
     p, table = make_plot(src)
 
+    # Net income Labels
     Net_income_s = Label(x=1.85, y=60000, text="Net income: 41909€")
     Net_income_i = Label(x=4.75, y=60000, text="Net income: 41440")
     p.add_layout(Net_income_s)
@@ -282,15 +185,19 @@ def individual_view(plot_dict):
         height=20,
     )
 
+    description = Div(text=plot_dict["description"], width=1000,)
+
     reference = Div(
         text="""Data from own calculations. Assumed is a uniform deduction of 20% of
         labor income (status quo) and 20% of total income (reform). The tax amounts
-        are calculated with GETTSIM.""",
+        are calculated with <a href="https://gettsim.readthedocs.io/en/stable/">GETTSIM</a>.""",
         width=800,
         height=80,
     )
 
-    layout = column(LI_selection, CI_selection, p, table_title, table, reference)
+    layout = column(
+        description, LI_selection, CI_selection, p, table_title, table, reference
+    )
 
     tab = Panel(child=layout, title="Net incomes")
 

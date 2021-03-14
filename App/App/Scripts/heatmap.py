@@ -1,114 +1,24 @@
 from Scripts.plotstyle import plotstyle
 
-import numpy as np
-import pandas as pd
 from bokeh.layouts import column
 from bokeh.models import BasicTicker
 from bokeh.models import ColorBar
 from bokeh.models import ColumnDataSource
+from bokeh.models import Div
+from bokeh.models import HoverTool
 from bokeh.models import LabelSet
 from bokeh.models import LinearColorMapper
 from bokeh.models import NumeralTickFormatter
 from bokeh.models import Panel
-from bokeh.models import HoverTool
 from bokeh.palettes import Turbo256
 from bokeh.plotting import figure
 from bokeh.transform import transform
-from gettsim import set_up_policy_environment
-from gettsim.taxes.eink_st import st_tarif
 
 
-def heatmap_tab(plot_dict):
-    plot_dict = plot_dict["Impact_heatmap"]
-
-    def prepare_data():
-        LI = pd.Series(data=np.linspace(0, 310000, 250))  # Labor Income
-        CI = pd.Series(data=np.linspace(0, 100000, 250))  # Capital Income
-
-        # Get relevant policy params from GETTSIM
-        policy_params, policy_functions = set_up_policy_environment(2020)
-        CD = policy_params["eink_st_abzuege"]["sparerpauschbetrag"]
-        CTau = policy_params["abgelt_st"]["abgelt_st_satz"]  # Capital income tax rate
-
-        TCI = CI - CD  # taxable capital income
-        TCI[TCI < 0] = 0  # replace negative taxable income
-        CT = TCI * CTau  # Capital income tax
-
-        heatmap_df = pd.DataFrame(columns=LI)
-
-        # Iterate through LI and CI combinations for separate taxes
-        for i in range(len(LI)):
-            this_column = heatmap_df.columns[i]
-            e = pd.Series(data=[LI[i]] * len(LI))
-            c = e + CI
-            heatmap_df[this_column] = (st_tarif(c, policy_params["eink_st"])) - (
-                st_tarif(e, policy_params["eink_st"]) + CT
-            )
-
-        heatmap_df.index = CI
-
-        heatmap_source = pd.DataFrame(
-            heatmap_df.stack(), columns=["Change to tax burden"]
-        ).reset_index()
-        heatmap_source.columns = [
-            "Capital income",
-            "Labor income",
-            "Change to tax burden",
-        ]
-
-        # Data to show where average household per decile is located in heatmap
-        deciles = ["", "", "", "", "", "", "", "", "", "P90", "P95", "P99", "P100"]
-        capital_income_tax = pd.Series(
-            data=[0, 0, 0, 0, 0, 4, 15, 36, 52, 84, 167, 559, 13873]
-        )  # from Bach & Buslei 2017 table 3-2
-        capital_income = capital_income_tax / 0.26375
-        total_income = pd.Series(
-            data=[
-                0,
-                -868,
-                4569,
-                9698,
-                14050,
-                18760,
-                23846,
-                29577,
-                36769,
-                47676,
-                63486,
-                95899,
-                350423,
-            ]
-        )  # from Bach & Buslei 2017 table 3-2 "Äquivalenzgewichtetes Einkommen"
-        labor_income = total_income - capital_income
-
-        household_dict = {
-            "deciles": deciles,
-            "capital_income": capital_income,
-            "labor_income": labor_income,
-        }
-
-        # Data for heatmap hight lines
-
-        line_source_dict = {}
-        for i in range(-1, 14):
-            line_source_dict[i] = ColumnDataSource(
-                heatmap_source[
-                    heatmap_source["Change to tax burden"].between(
-                        0 + (i) * 1500, 75 + (i) * 1500
-                    )
-                ]
-            )
-
-        return (
-            ColumnDataSource(heatmap_source),
-            ColumnDataSource(household_dict),
-            line_source_dict,
-        )
-
+def heatmap_tab(plot_dict, data):
     def setup_plot(src_heatmap, src_household, line_source_dict):
         colors = Turbo256[145:256]
         colors = list(colors)
-        # colors.reverse()
         mapper = LinearColorMapper(
             palette=colors,
             low=min(src_heatmap.data["Change to tax burden"]),
@@ -122,7 +32,6 @@ def heatmap_tab(plot_dict):
             x_range=(0, 310000),
             y_range=(0, 100000),
             tools="save",
-            
         )
 
         p.rect(
@@ -167,18 +76,16 @@ def heatmap_tab(plot_dict):
                 source=line_source_dict[i],
                 line_width=1,
                 line_color="grey",
-                name=str(i)
+                name=str(i),
             )
 
         hover = HoverTool(
             tooltips=[
-                ( 'Impact to tax burden',   "@{Change to tax burden}{0€} €"   ),
-                ( 'Taxable labor income',   "$x{0€} €"   ),
-                 ( 'Taxable capital income',   "$y{0€} €"   ),
-            
+                ("Impact to tax burden", "@{Change to tax burden}{0€} €"),
+                ("Taxable labor income", "$x{0€} €"),
+                ("Taxable capital income", "$y{0€} €"),
             ],
-            names = [str(i) for i in line_source_dict.keys()]
-            
+            names=[str(i) for i in line_source_dict.keys()],
         )
         p.add_tools(hover)
 
@@ -188,11 +95,27 @@ def heatmap_tab(plot_dict):
 
         return plot
 
-    src_heatmap, src_household, line_source_dict = prepare_data()
+    src_heatmap, src_household = (
+        ColumnDataSource(data["heatmap_source"]),
+        ColumnDataSource(data["household_dict"]),
+    )
+
+    # Build the data sources for the contour lines
+    line_source_dict = {}
+    for i in range(-1, 14):
+        line_source_dict[i] = ColumnDataSource(
+            data["heatmap_source"][
+                data["heatmap_source"]["Change to tax burden"].between(
+                    0 + (i) * 1500, 75 + (i) * 1500
+                )
+            ]
+        )
 
     p = setup_plot(src_heatmap, src_household, line_source_dict)
 
-    layout = column(p)
+    description = Div(text=plot_dict["description"], width=1000,)
+
+    layout = column(description, p)
 
     tab = Panel(child=layout, title="Household heatmap (Reform)")
 
