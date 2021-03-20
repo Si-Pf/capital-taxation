@@ -69,7 +69,7 @@ def parameter_heatmap_tab(plot_dict, data):
             ticker=BasicTicker(desired_num_ticks=20),
             formatter=NumeralTickFormatter(format="0€"),
             label_standoff=12,
-            title="Reform revenue (in Mio. €)",
+            title="Reform revenue effect (in Mio. €)",
         )
         p.add_layout(color_bar, "right")
 

@@ -54,9 +54,9 @@ attribute_dict = {
         "0€",
         "top_left",
         """Illustration of the individual mechanical effect of separate capital and labor
-        taxation of the status quo (S) compared to the reform with integrated income tax
-        system (R). Assumed is constant deduction behavior and  labor / capital supply.
-        Slicers select income combinations to be compared.""",
+        taxation at the status quo (S), compared to a reform with integrated income tax
+        system (R). Constant deduction behavior and  labor / capital supply assumed.
+        Sliders select income combinations to be compared.""",
     ],
     "lorenz_curves": [
         "Lorenz curves Germany 2017",
@@ -89,11 +89,11 @@ attribute_dict = {
         "",
         "0€",
         "top_left",
-        """Based on the changes to the effective tax rate (ΔETR) by decile this figure
-        illustrates for different elasticity levels the average change in reported total
-        tax base due to behavioral responses. Bottom three deciles omitted (as ΔETR=0).
+        """Based on the changes to the effective tax rate (ΔETR) by decile, this figure
+        illustrates the average change in reported total tax base due to behavioral
+        responses for different elasticity levels. Bottom three deciles are omitted (as ΔETR=0).
         The recovered portion can be used to simulate offsetting externalities like
-        evaded taxes, recovered in tax audits or income shifted to other tax bases or
+        evaded taxes recovered in tax audits or income shifted to other tax bases or
         periods.""",
     ],
     "revenue_bevavior": [
@@ -114,10 +114,12 @@ attribute_dict = {
         "top_left",
         """Lorenz curves for Germany 2017 after including the simulated changes to
         tax burden per decile. Capital income is small compared to total income for
-        all deciles. Changes are hardly visible in the lorenz curve.""",
+        all deciles. Changes in total income after tax are hardly visible in the
+        lorenz curve. The green curve for the status quo and the red curve for the
+        reform are very close to each other.""",
     ],
     "parameter_heatmap": [
-        "Parameter heatmap: Effect of the reform by behavioral response parameter values",
+        "Heatmap: Reform effect on tax revenue by behavioral response parameter values",
         "Recovered portion (Offsetting externalities to behavioral reactions)",
         "Elasticity of capital income",
         "0.0",
